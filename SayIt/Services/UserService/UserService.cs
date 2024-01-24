@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using SayIt.Models.Tables;
 using SayIt.Repositories.GenericRepository;
 using SayIt.Repositories.UserRepository;
@@ -33,7 +34,7 @@ public class UserService : IUserService
                  DateCreated = new DateTime(),
                  DateModified = new DateTime(),
                  Password = user.Password
-             };
+            };
 
         _userRepo.Create(newUser);
         _userRepo.Save();
@@ -45,5 +46,22 @@ public class UserService : IUserService
     {
         var dbUser = _userRepo.FindUserByName(user.Username);
         return dbUser.Password == user.Password;
+    }
+
+    public void DeleteUserByName(string name)
+    {
+        var usr = _userRepo.FindUserByName(name);
+        _userRepo.Delete(usr);
+        _userRepo.Save();
+    }
+
+    public User UpdateUserByName(string name, UserDTO updated)
+    {
+        var usr = _userRepo.FindUserByName(name);
+        usr.Username = updated.Username;
+        usr.Password = updated.Password;
+        _userRepo.Update(usr);
+        _userRepo.Save();
+        return usr;
     }
 }

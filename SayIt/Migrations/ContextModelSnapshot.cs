@@ -48,6 +48,37 @@ namespace SayIt.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("SayIt.Models.Profile.Profile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("profilePic")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Profiles");
+                });
+
             modelBuilder.Entity("SayIt.Models.Tables.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -61,6 +92,7 @@ namespace SayIt.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Role")
@@ -85,8 +117,22 @@ namespace SayIt.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("SayIt.Models.Profile.Profile", b =>
+                {
+                    b.HasOne("SayIt.Models.Tables.User", "CorespondingUser")
+                        .WithOne("Extra")
+                        .HasForeignKey("SayIt.Models.Profile.Profile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CorespondingUser");
+                });
+
             modelBuilder.Entity("SayIt.Models.Tables.User", b =>
                 {
+                    b.Navigation("Extra")
+                        .IsRequired();
+
                     b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618

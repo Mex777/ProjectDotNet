@@ -9,5 +9,5 @@ public class User : BaseEntity
     
     public string? Password { get; set; }
 
-    public ICollection<Post> Posts { get; set; } = new List<Post>();
+    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 }

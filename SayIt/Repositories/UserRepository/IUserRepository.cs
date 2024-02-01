@@ -6,4 +6,6 @@ namespace SayIt.Repositories.UserRepository;
 public interface IUserRepository : IGenericRepository<User>
 {
     public User FindUserByName(string username);
+
+    public void LoadPosts(User user);
 }

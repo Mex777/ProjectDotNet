@@ -65,6 +65,7 @@ builder.Services.AddSwaggerGen(option =>
 
 builder.Services.AddDataProtection();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddRepositories();
 builder.Services.AddServices();
 

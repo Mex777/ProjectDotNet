@@ -23,6 +23,7 @@ public class UserController : ControllerBase
       return Ok(_userService.GetAllUsers());
    }
 
+   [Authorize(Roles = "Admin")]
    [HttpDelete("{name}")]
    public IActionResult DeleteUserByName(string name)
    {

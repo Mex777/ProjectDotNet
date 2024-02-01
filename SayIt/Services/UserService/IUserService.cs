@@ -14,5 +14,5 @@ public interface IUserService
 
     public void DeleteUserByName(string name);
 
-    public User UpdateUserByName(string name, UserDTO updated);
+    public UserDTO UpdateUserByName(string name, UserDTO updated);
 }

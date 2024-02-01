@@ -1,3 +1,4 @@
+using SayIt.Helpers;
 using SayIt.Models.Base;
 using SayIt.Models.Posts;
 
@@ -8,6 +9,8 @@ public class User : BaseEntity
     public string? Username { get; set; }
     
     public string? Password { get; set; }
+    
+    public UserRoles Role { get; set; }
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 }

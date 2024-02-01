@@ -13,9 +13,11 @@ public class MapperProfile : Profile
             p => p.Author,
             opts => opts.MapFrom(po => po.Author.Username)
             );
-      
+
+      CreateMap<User, UserDTO>();
+
       // CreateMap<User, List<PostDTO>>()
-         // .ForMember(dest => dest, opt => opt.MapFrom(src => src.Posts));
+      // .ForMember(dest => dest, opt => opt.MapFrom(src => src.Posts));
       // CreateMap<Book, BookDto>()
       //    .ForMember(
       //       bd => bd.PublisherName, 

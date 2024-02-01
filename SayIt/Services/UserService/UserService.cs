@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,11 @@ namespace SayIt.Services.UserService;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepo;
-    public UserService(IUserRepository repo)
+    private readonly IMapper _mapper;
+    public UserService(IUserRepository repo, IMapper mapper)
     {
         _userRepo = repo;
+        _mapper = mapper;
     }
     
     public List<User> GetAllUsers()
@@ -23,7 +26,7 @@ public class UserService : IUserService
 
     public UserDTO GetUserDtoByName(string name)
     {
-        return new UserDTO();
+        return _mapper.Map<UserDTO>(_userRepo.FindUserByName(name));
     }
 
     public User AddUser(UserDTO user)
@@ -34,6 +37,7 @@ public class UserService : IUserService
                  Username = user.Username,
                  DateCreated = new DateTime(),
                  DateModified = new DateTime(),
+                 Role = user.Role,
                  Password = PasswordHasher.HashPassword(user.Password)
             };
         
@@ -56,13 +60,13 @@ public class UserService : IUserService
         _userRepo.Save();
     }
 
-    public User UpdateUserByName(string name, UserDTO updated)
+    public UserDTO UpdateUserByName(string name, UserDTO updated)
     {
         var usr = _userRepo.FindUserByName(name);
-        usr.Username = updated.Username;
         usr.Password = updated.Password;
+        usr.Role = updated.Role;
         _userRepo.Update(usr);
         _userRepo.Save();
-        return usr;
+        return _mapper.Map<UserDTO>(usr);
     }
 }

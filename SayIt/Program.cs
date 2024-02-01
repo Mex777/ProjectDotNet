@@ -1,9 +1,11 @@
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SayIt.Data;
+using SayIt.Helpers;
 using SayIt.Helpers.Extensions;
 using SayIt.Services.UserService;
 
@@ -30,7 +32,12 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuerSigningKey = true
     };
 });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireStandard", policy => policy.RequireRole(ClaimTypes.Role, UserRoles.Standard.ToString()));
+    options.AddPolicy("RequireAdmin", policy => policy.RequireRole(ClaimTypes.Role, UserRoles.Admin.ToString()));
+});
+
 builder.Services.AddControllers();
 builder.Services.AddDbContext<Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddEndpointsApiExplorer();

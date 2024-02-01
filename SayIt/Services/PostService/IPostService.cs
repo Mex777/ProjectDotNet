@@ -10,5 +10,7 @@ public interface IPostService
 
     List<PostDTO> GetPostsByUsername(string username);
 
-    public List<Post> GetAllPosts2();
+    void DeletePostById(Guid id);
+
+    bool ModifyPostById(Guid Id, string text);
 }

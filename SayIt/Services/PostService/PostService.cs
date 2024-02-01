@@ -60,12 +60,6 @@ public class PostService : IPostService
         
     }
     
-    public List<Post> GetAllPosts2()
-    {
-        var postList = _repo.GetAllWithAuthors();
-        return postList;
-    }
-
     public List<PostDTO> GetPostsByUsername(string username)
     {
         var user = _usr.FindUserByName(username);
@@ -76,5 +70,20 @@ public class PostService : IPostService
         }
 
         return posts;
+    }
+
+    public void DeletePostById(Guid postId)
+    {
+        var post = _repo.FindById(postId); 
+        _repo.Delete(post);
+        _repo.Save();
+    }
+
+    public bool ModifyPostById(Guid postId, string text)
+    {
+        var post = _repo.FindById(postId);
+        post.Text = text;
+        _repo.Save();
+        return true;
     }
 }

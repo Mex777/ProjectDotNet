@@ -24,12 +24,6 @@ public class PostController : ControllerBase
       return Ok(_postService.GetAllPosts());
    }
 
-   [HttpGet("tests")]
-   public IActionResult Getposts()
-   {
-      return Ok(_postService.GetAllPosts2());
-   }
-
    [Authorize]
    [HttpPost]
    public IActionResult AddPost(PostDTO post)
@@ -49,10 +43,16 @@ public class PostController : ControllerBase
       return Ok(_postService.GetPostsByUsername(username));
    }
 
-   // [HttpDelete("{name}")]
-   // public IActionResult DeleteUserByName(string name)
-   // {
-   //    _userService.DeleteUserByName(name);
-   //    return Ok();
-   // }
+   [HttpDelete("{postId}")]
+   public IActionResult DeleteUserByName(Guid postId)
+   {
+      _postService.DeletePostById(postId);
+      return Ok();
+   }
+
+   [HttpPut("{postId}")]
+   public IActionResult ModifyPost(Guid postId, string text)
+   {
+      return Ok(_postService.ModifyPostById(postId, text));
+   }
 }

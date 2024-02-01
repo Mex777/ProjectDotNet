@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SayIt.Helpers;
 using SayIt.Models.Tables;
 using SayIt.Repositories.GenericRepository;
 using SayIt.Repositories.UserRepository;
@@ -8,8 +10,7 @@ namespace SayIt.Services.UserService;
 
 public class UserService : IUserService
 {
-    private IUserRepository _userRepo;
-
+    private readonly IUserRepository _userRepo;
     public UserService(IUserRepository repo)
     {
         _userRepo = repo;
@@ -33,9 +34,9 @@ public class UserService : IUserService
                  Username = user.Username,
                  DateCreated = new DateTime(),
                  DateModified = new DateTime(),
-                 Password = user.Password
+                 Password = PasswordHasher.HashPassword(user.Password)
             };
-
+        
         _userRepo.Create(newUser);
         _userRepo.Save();
 
@@ -45,7 +46,7 @@ public class UserService : IUserService
     public bool Login(UserDTO user)
     {
         var dbUser = _userRepo.FindUserByName(user.Username);
-        return dbUser.Password == user.Password;
+        return PasswordHasher.VerifyPassword(user.Password, dbUser.Password);
     }
 
     public void DeleteUserByName(string name)

@@ -22,6 +22,24 @@ namespace SayIt.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("SayIt.Models.Likes.Like", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LikeTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserId", "PostId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("SayIt.Models.Posts.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -61,15 +79,13 @@ namespace SayIt.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfilePic")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("profilePic")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -107,31 +123,58 @@ namespace SayIt.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("SayIt.Models.Likes.Like", b =>
+                {
+                    b.HasOne("SayIt.Models.Posts.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SayIt.Models.Tables.User", "User")
+                        .WithMany("Likes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SayIt.Models.Posts.Post", b =>
                 {
                     b.HasOne("SayIt.Models.Tables.User", "Author")
                         .WithMany("Posts")
                         .HasForeignKey("AuthorUsername")
-                        .HasPrincipalKey("Username");
+                        .HasPrincipalKey("Username")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Author");
                 });
 
             modelBuilder.Entity("SayIt.Models.Profile.Profile", b =>
                 {
-                    b.HasOne("SayIt.Models.Tables.User", "CorespondingUser")
+                    b.HasOne("SayIt.Models.Tables.User", "CorrespondingUser")
                         .WithOne("Extra")
                         .HasForeignKey("SayIt.Models.Profile.Profile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CorespondingUser");
+                    b.Navigation("CorrespondingUser");
+                });
+
+            modelBuilder.Entity("SayIt.Models.Posts.Post", b =>
+                {
+                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("SayIt.Models.Tables.User", b =>
                 {
                     b.Navigation("Extra")
                         .IsRequired();
+
+                    b.Navigation("Likes");
 
                     b.Navigation("Posts");
                 });

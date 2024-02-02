@@ -1,9 +1,10 @@
+using SayIt.Models.Base;
 using SayIt.Models.Posts;
 using SayIt.Models.Tables;
 
 namespace SayIt.Models.Likes;
 
-public class Like
+public class Like : BaseEntity
 {
     public Guid UserId { get; set; }    
     public virtual User User { get; set; }

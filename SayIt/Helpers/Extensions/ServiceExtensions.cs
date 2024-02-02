@@ -1,6 +1,8 @@
+using SayIt.Repositories.LikeRepository;
 using SayIt.Repositories.PostRepository;
 using SayIt.Repositories.ProfileRepository;
 using SayIt.Repositories.UserRepository;
+using SayIt.Services.LikeService;
 using SayIt.Services.PostService;
 using SayIt.Services.ProfileService;
 using SayIt.Services.UserService;
@@ -14,6 +16,7 @@ public static class ServiceExtensions
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IProfileRepository, ProfileRepository>();
+        services.AddScoped<ILikeRepository, LikeRepository>();
 
         return services;
     }
@@ -23,6 +26,7 @@ public static class ServiceExtensions
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IPostService, PostService>();
         services.AddScoped<IProfileService, ProfileService>();
+        services.AddScoped<ILikeService, LikeService>();
 
         return services;
     } 

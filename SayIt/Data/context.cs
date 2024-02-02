@@ -47,7 +47,6 @@ public class Context : DbContext
          .WithMany(p => p.Likes)
          .HasForeignKey(l => l.PostId);
       
-      
       base.OnModelCreating(modelBuilder);
    }
 }

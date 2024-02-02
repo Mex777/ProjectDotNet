@@ -22,12 +22,15 @@ public class Context : DbContext
       modelBuilder.Entity<User>()
          .HasMany(usr => usr.Posts)
          .WithOne(pst => pst.Author)
-         .HasPrincipalKey(usr => usr.Username);
+         .HasPrincipalKey(usr => usr.Username)
+         .OnDelete(DeleteBehavior.Cascade);
 
       modelBuilder.Entity<User>()
          .HasOne(u => u.Extra)
-         .WithOne(p => p.CorespondingUser)
-         .HasForeignKey<Profile>(p => p.UserId);
+         .WithOne(p => p.CorrespondingUser)
+         .HasForeignKey<Profile>(p => p.UserId)
+         .OnDelete(DeleteBehavior.Cascade);
+      
       
       base.OnModelCreating(modelBuilder);
    }

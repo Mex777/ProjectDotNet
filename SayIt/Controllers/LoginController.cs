@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -15,9 +16,35 @@ namespace SayIt.Controllers;
 [Route("[controller]")]
 public class SecurityController : ControllerBase
 {
-    private IConfiguration _config;
+    private readonly IConfiguration _config;
     private readonly IUserService _userService;
+    private readonly IMapper _mapper;
 
+    public SecurityController(IUserService usrService, IConfiguration config, IMapper mapper)
+    {
+        _userService = usrService;
+        _config = config;
+        _mapper = mapper;
+    } 
+    
+    [HttpPost("register")]
+    public IActionResult Register(UserDTO dto)
+    {
+        var usr = _userService.AddUser(dto); 
+        return Ok(_mapper.Map<UserDTO>(usr));
+    }
+
+    [HttpPost("login")]
+    public IActionResult Login(UserDTO user)
+    {
+        if (_userService.Login(user))
+        {
+            return Ok(GenerateJsonWebToken(_userService.GetUserDtoByName(user.Username)));
+        }
+
+        return NotFound();
+    }
+    
     private string GenerateJsonWebToken(UserDTO userDto)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -35,29 +62,5 @@ public class SecurityController : ControllerBase
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
-    } 
-    
-    public SecurityController(IUserService usrService, IConfiguration config)
-    {
-        _userService = usrService;
-        _config = config;
-    } 
-    
-    [HttpPost("register")]
-    public IActionResult Register(UserDTO dto)
-    {
-        var usr = _userService.AddUser(dto); 
-        return Ok(usr);
-    }
-
-    [HttpPost("login")]
-    public IActionResult Login(UserDTO user)
-    {
-        if (_userService.Login(user))
-        {
-            return Ok(GenerateJsonWebToken(_userService.GetUserDtoByName(user.Username)));
-        }
-
-        return NotFound();
     }
 }

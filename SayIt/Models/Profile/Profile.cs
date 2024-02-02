@@ -6,13 +6,13 @@ namespace SayIt.Models.Profile;
 
 public class Profile : BaseEntity
 {
-   public string Description { get; set; }
+   public string? Description { get; set; }
    
-   public string profilePic { get; set; }
+   public string? ProfilePic { get; set; }
 
    [Required] 
    public Guid UserId { get; set; }
    
    [Required]
-   public virtual User CorespondingUser { get; set; }
+   public virtual User CorrespondingUser { get; set; }
 }

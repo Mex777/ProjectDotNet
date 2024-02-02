@@ -1,6 +1,7 @@
-using AutoMapper;
 using SayIt.Models.Posts;
+using SayIt.Models.Profile;
 using SayIt.Models.Tables;
+using Profile = AutoMapper.Profile;
 
 namespace SayIt.Helpers;
 
@@ -15,6 +16,12 @@ public class MapperProfile : Profile
             );
 
       CreateMap<User, UserDTO>();
+
+      CreateMap<Models.Profile.Profile, ProfileDTO>()
+         .ForMember(
+            p => p.Username,
+            opts => opts.MapFrom(pf => pf.CorrespondingUser.Username)
+            );
 
       // CreateMap<User, List<PostDTO>>()
       // .ForMember(dest => dest, opt => opt.MapFrom(src => src.Posts));

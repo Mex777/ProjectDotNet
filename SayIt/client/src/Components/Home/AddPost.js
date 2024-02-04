@@ -39,14 +39,19 @@ export default function AddPost({ newPost }) {
     }
   };
 
+  const style = {
+  }
+
   return (
-    <form>
+    <form className="add-post">
       <textarea
+        className="add-post-text"
         placeholder="What's on your mind?"
+        style={{width: '100%'}}
         value={value}
         onChange={handleChange}
       />
-      <button onClick={handlePost}>Post</button>
+      <button className="add-post-btn" onClick={handlePost}>Post</button>
     </form>
   );
 }

@@ -5,9 +5,7 @@ export default function Posts({ posts, deletePost }) {
   return (
     <div className="posts">
       {posts.map((post, ind) => {
-        return (
-          <Post post={post} ind={ind} deletePost={deletePost}/>
-        );
+        return <Post post={post} ind={ind} deletePost={deletePost} />;
       })}
     </div>
   );

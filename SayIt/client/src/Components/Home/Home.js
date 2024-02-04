@@ -3,6 +3,7 @@ import { getToken, logout } from "../Login/auth";
 import { useEffect, useState } from "react";
 import Posts from "./Posts";
 import AddPost from "./AddPost";
+import Header from "../Header";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -17,10 +18,7 @@ export default function Home() {
   useEffect(() => {
     const getPosts = async () => {
       const myHeaders = new Headers();
-      myHeaders.append(
-        "Authorization",
-        `Bearer ${getToken()}`
-      );
+      myHeaders.append("Authorization", `Bearer ${getToken()}`);
       myHeaders.append("Content-Type", "application/json");
 
       const requestOptions = {
@@ -33,9 +31,9 @@ export default function Home() {
       if (res.status !== 200) {
         return;
       }
-      
+
       const json = await res.json();
-      setPosts(json)
+      setPosts(json);
     };
 
     getPosts();
@@ -43,12 +41,15 @@ export default function Home() {
 
   return (
     <>
-      <h1>hello world</h1>
-      <button onClick={handleLogout}>Sign out</button>
+      <Header />
+      <div className="content">
+        <button class="sign-out" onClick={handleLogout}>
+          Sign out
+        </button>
+        <AddPost newPost={() => setNewPost(!newPost)} />
 
-      <AddPost newPost={() => setNewPost(!newPost)} />
-
-      <Posts posts={posts} deletePost={() => setNewPost(!newPost)}/>
+        <Posts posts={posts} deletePost={() => setNewPost(!newPost)} />
+      </div>
     </>
   );
 }

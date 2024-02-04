@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { getToken } from "../Login/auth";
+import { getToken, logout } from "../Login/auth";
 import { useNavigate, useParams } from "react-router-dom";
 import Posts from "../Home/Posts";
+import Header from "../Header";
 
 export default function Profile() {
   const { username } = useParams();
@@ -9,6 +10,11 @@ export default function Profile() {
   const [userInfo, setUserInfo] = useState({});
   const [deletePost, setDeletePost] = useState(false);
   const [posts, setPosts] = useState([]);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -27,7 +33,7 @@ export default function Profile() {
       } else {
         navigate("/404");
       }
-      
+
       myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${getToken()}`);
       myHeaders.append("Content-Type", "application/json");
@@ -51,17 +57,23 @@ export default function Profile() {
   }, [username, navigate, deletePost]);
 
   return (
-    <div>
-      <h1>Profile of {userInfo.username}</h1>
-      <div className="description">
-        <h3>Description</h3>
-        <p>{userInfo.description}</p>
-      </div>
+    <>
+      <Header />
+      <button class="sign-out" onClick={handleLogout}>
+        Sign out
+      </button>
+      <div>
+        <h1>Profile of {userInfo.username}</h1>
+        <div className="description">
+          <h2>Description</h2>
+          <p>{userInfo.description}</p>
+        </div>
 
-      <div className="liked-posts">
-        <h3>Liked posts</h3>
-        <Posts posts={posts} deletePost={() => setDeletePost(!deletePost)}/>
+        <div className="liked-posts">
+          <h2>Liked posts</h2>
+          <Posts posts={posts} deletePost={() => setDeletePost(!deletePost)} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

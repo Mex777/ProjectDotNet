@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { getToken, getUser, getUserId, isAdmin } from "./Login/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Post({ post, ind, deletePost }) {
   const [like, setLike] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLikedPost = async () => {
@@ -57,7 +59,10 @@ export default function Post({ post, ind, deletePost }) {
       redirect: "follow",
     };
 
-    const res = await fetch(`/Like?userId=${getUserId()}&postId=${post.id}`, requestOptions);
+    const res = await fetch(
+      `/Like?userId=${getUserId()}&postId=${post.id}`,
+      requestOptions
+    );
     if (res.status === 200) {
       setLike(true);
     }
@@ -73,30 +78,44 @@ export default function Post({ post, ind, deletePost }) {
       redirect: "follow",
     };
 
-    const res = await fetch(`/Like?userId=${getUserId()}&postId=${post.id}`, requestOptions);
+    const res = await fetch(
+      `/Like?userId=${getUserId()}&postId=${post.id}`,
+      requestOptions
+    );
     if (res.status === 200) {
       setLike(false);
     }
-  }
+  };
+
+  const handleProfile = (username) => {
+    navigate(`/profile/${username}`);
+  };
 
   return (
     <div key={ind} className="post">
-      <h4>Author: {post.author}</h4>
+      <h4 onClick={() => handleProfile(post.author)}>{post.author}</h4>
       <p>{post.text}</p>
-      {like ? (
-        <button onClick={handleRemoveLike}>Remove Like</button>
-      ) : (
-        <button onClick={handleLike}>Like</button>
-      )}
-      {(isAdmin() || post.author === getUser()) && (
-        <button
-          onClick={() => {
-            handleDelete(post.id);
-          }}
-        >
-          delete
-        </button>
-      )}
+      <div className="buttons">
+        {like ? (
+          <button onClick={handleRemoveLike} className="unlike">
+            Remove Like
+          </button>
+        ) : (
+          <button onClick={handleLike} className="like">
+            Like
+          </button>
+        )}
+        {(isAdmin() || post.author === getUser()) && (
+          <button
+            className="delete"
+            onClick={() => {
+              handleDelete(post.id);
+            }}
+          >
+            delete
+          </button>
+        )}
+      </div>
     </div>
   );
 }

@@ -92,10 +92,23 @@ export const getUser = () => {
 }
 
 export const isAdmin = () => {
-    try {
+  try {
     const decodedToken = jwtDecode(getToken());
+    console.log(decodedToken);
 
     return decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] === "Admin";
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return false; // Error decoding token
+  }
+}
+
+export const getUserId = () => {
+  try {
+    const decodedToken = jwtDecode(getToken());
+    console.log(decodedToken);
+
+    return decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/serialnumber"];
   } catch (error) {
     console.error("Error decoding token:", error);
     return false; // Error decoding token

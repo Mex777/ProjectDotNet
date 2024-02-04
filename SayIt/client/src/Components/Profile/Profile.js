@@ -1,0 +1,67 @@
+import { useEffect, useState } from "react";
+import { getToken } from "../Login/auth";
+import { useNavigate, useParams } from "react-router-dom";
+import Posts from "../Home/Posts";
+
+export default function Profile() {
+  const { username } = useParams();
+  const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState({});
+  const [deletePost, setDeletePost] = useState(false);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      let myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${getToken()}`);
+      let requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+
+      let res = await fetch(`/Profile/${username}`, requestOptions);
+      if (res.status === 200) {
+        const resJson = await res.json();
+        setUserInfo(resJson);
+      } else {
+        navigate("/404");
+      }
+      
+      myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${getToken()}`);
+      myHeaders.append("Content-Type", "application/json");
+
+      requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+
+      res = await fetch(`/users/${username}/likes`, requestOptions);
+      if (res.status !== 200) {
+        return;
+      }
+
+      const json = await res.json();
+      setPosts(json);
+    };
+
+    fetchProfile();
+  }, [username, navigate, deletePost]);
+
+  return (
+    <div>
+      <h1>Profile of {userInfo.username}</h1>
+      <div className="description">
+        <h3>Description</h3>
+        <p>{userInfo.description}</p>
+      </div>
+
+      <div className="liked-posts">
+        <h3>Liked posts</h3>
+        <Posts posts={posts} deletePost={() => setDeletePost(!deletePost)}/>
+      </div>
+    </div>
+  );
+}

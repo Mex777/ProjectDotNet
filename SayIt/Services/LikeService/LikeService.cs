@@ -69,4 +69,15 @@ public class LikeService : ILikeService
             _repo.Save();
         }
     }
+
+    public bool LikedPost(Guid userId, Guid postId)
+    {
+        var like = _repo.GetById(userId, postId);
+        if (like != null)
+        {
+            return true;
+        }
+        
+        return false;
+    }
 }

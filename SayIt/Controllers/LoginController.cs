@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -44,6 +45,13 @@ public class SecurityController : ControllerBase
 
         return NotFound();
     }
+
+    [Authorize]
+    [HttpGet]
+    public IActionResult ValidToken()
+    {
+        return Ok();
+    }
     
     private string GenerateJsonWebToken(UserDTO userDto)
     {
@@ -52,12 +60,13 @@ public class SecurityController : ControllerBase
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, userDto.Username),
-            new Claim(ClaimTypes.Role, userDto.Role.ToString())
+            new Claim(ClaimTypes.Role, userDto.Role.ToString()),
+            new Claim(ClaimTypes.SerialNumber, _userService.GetUserIdByName(userDto.Username).ToString())
         };
 
         var token = new JwtSecurityToken(_config["Jwt:Issuer"],
             _config["Jwt:Issuer"],
-            expires: DateTime.Now.AddMinutes(120),
+            expires: DateTime.Now.AddMinutes(60),
             claims: claims,
             signingCredentials: credentials);
 

@@ -15,4 +15,6 @@ public interface IUserService
     public void DeleteUserByName(string name);
 
     public UserDTO UpdateUserByName(string name, UserDTO updated);
+
+    public Guid GetUserIdByName(string name);
 }

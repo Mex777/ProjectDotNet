@@ -34,6 +34,11 @@ public class UserService : IUserService
         return _mapper.Map<UserDTO>(_userRepo.FindUserByName(name));
     }
 
+    public Guid GetUserIdByName(string name)
+    {
+        return _userRepo.FindUserByName(name).Id;
+    }
+
     public User AddUser(UserDTO user)
     {
         var newUser = new User

@@ -27,6 +27,17 @@ public class LikeController : ControllerBase
        _service.DeleteLike(userId, postId);
        return Ok();
     }
+    
+    [HttpGet("/like/{userId}/{postId}")]
+    public IActionResult LikedPost(Guid userId, Guid postId)
+    {
+        if (_service.LikedPost(userId, postId))
+        {
+            return Ok();
+        }
+
+        return NotFound();
+    }
 
     [HttpGet("/users/{username}/likes")]
     public IActionResult GetLikedPosts(string username)

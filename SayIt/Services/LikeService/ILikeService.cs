@@ -12,4 +12,6 @@ public interface ILikeService
     void AddLike(Guid userId, Guid postId);
 
     void DeleteLike(Guid userId, Guid postId);
+
+    public bool LikedPost(Guid userId, Guid postId);
 }

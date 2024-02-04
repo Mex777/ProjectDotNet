@@ -7,6 +7,7 @@ using SayIt.Services.UserService;
 
 namespace SayIt.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/posts")]
 public class PostController : ControllerBase
